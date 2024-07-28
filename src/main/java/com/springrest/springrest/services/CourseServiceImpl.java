@@ -4,25 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springrest.springrest.Dao.CourseDao;
 import com.springrest.springrest.entities.Course;
 
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    List<Course> list;
+    @Autowired
+    private CourseDao courseDao;
+
+    // List<Course> list;
     public CourseServiceImpl(){
-        list=new ArrayList<>();
-        list.add(new Course(145,"java course", " this is course description"));
-        list.add(new Course(146,"java2 course", " this is course description2"));
+
+        // list=new ArrayList<>();
+        // list.add(new Course(145,"java course", " this is course description"));
+        // list.add(new Course(146,"java2 course", " this is course description2"));
+
+
     }
 
 
     @Override
     public List<Course>getCourses(){
 
-        return list;
+        return courseDao.findAll();
     }
 
 
@@ -30,17 +38,17 @@ public class CourseServiceImpl implements CourseService {
     public Course getCourse(long courseId) {
         // TODO Auto-generated method stub
         
-        Course c= null;
-        for (Course course : list) {
+        // Course c= null;
+        // for (Course course : list) {
 
-            if (course.getId()==courseId) {
+        //     if (course.getId()==courseId) {
                 
-                c=course;
-                break;
-            }
+        //         c=course;
+        //         break;
+        //     }
             
-        }
-        return c;
+        // }
+        return courseDao.getOne(courseId);
 
     }
 
@@ -49,7 +57,9 @@ public class CourseServiceImpl implements CourseService {
     public Course addCourse(Course course) {
         // TODO Auto-generated method stub
         
-        list.add(course);
+        // list.add(course);
+
+        courseDao.save(course);
         return course;
 
     }
@@ -58,12 +68,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course updateCourse(Course course) {
         // TODO Auto-generated method stub
-        list.forEach(e -> {
-            if (e.getId()==course.getId()){
-                e.setTitle(course.getTitle());
-                e.setDescription(course.getDescription());
-            }
-        });
+        // list.forEach(e -> {
+        //     if (e.getId()==course.getId()){
+        //         e.setTitle(course.getTitle());
+        //         e.setDescription(course.getDescription());
+        //     }
+        // });
+        courseDao.save(course);
         return course;
 
     }
@@ -72,7 +83,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void deleteCourse(long parseLong) {
         // TODO Auto-generated method stub
-        list=this.list.stream().filter(e->e.getId()!=parseLong).collect(Collectors.toList());
+        // list=this.list.stream().filter(e->e.getId()!=parseLong).collect(Collectors.toList());
+        Course entity=courseDao.getOne(parseLong);
+        courseDao.delete(entity);
     }
 
 }
